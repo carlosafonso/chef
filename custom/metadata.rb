@@ -7,3 +7,5 @@ description      "Custom"
 %w{ ubuntu debian centos redhat fedora }.each do |os|
 	supports os
 end
+
+depends	'composer'

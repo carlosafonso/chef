@@ -16,3 +16,13 @@ bash 'ssh_key_and_composer' do
         php artisan migrate
         EOH
 end
+
+migrations_instance_hostname = node[:opsworks][:layers]['php-app'][:instances].keys.sort.first
+Chef::Log.info("#{migrations_instance_hostname}")
+
+if migrations_instance_hostname == node[:opsworks][:instance][:hostname]
+        bash 'php artisan' do
+                cwd "#{node[:deploy]['opsworks'][:deploy_to]}/current"
+                php artisan migrate
+        end
+end

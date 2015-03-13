@@ -9,7 +9,7 @@ execute "bazinga" do
         command "chmod 400 ~/.ssh/deploykey"
         command "eval `ssh-agent -s`"
         command "ssh-add ~/.ssh/deploykey"
-        command "composer update --no-interaction --no-ansi"
+        #command "composer update --no-interaction --no-ansi"
 end
 
 #composer_package "/srv/www/opsworks/current" do

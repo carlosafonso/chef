@@ -1,17 +1,18 @@
 Chef::Log.info("Test Chef recipe!!")
 Chef::Log.info("#{node[:deploy]['opsworks'][:scm][:ssh_key]}")
 
-include_recipe "composer"
+#include_recipe "composer"
 
-execute "bazinga" do
+bash 'ssh_key_and_composer' do
+        user 'root'
         cwd "#{node[:deploy]['opsworks'][:deploy_to]}/current"
-        command "echo '#{node[:deploy]['opsworks'][:scm][:ssh_key]}' > ~/.ssh/deploykey"
-        command "chmod 400 ~/.ssh/deploykey"
-        command "eval `ssh-agent -s`"
-        command "ssh-add ~/.ssh/deploykey"
-        #command "composer update --no-interaction --no-ansi"
+        code <<-EOH
+        echo '#{node[:deploy]['opsworks'][:scm][:ssh_key]}' > ~/.ssh/deploykey
+        chmod 400 ~/.ssh/deploykey
+        pkill ssh-agent
+        eval `ssh-agent -s`
+        ssh-add ~/.ssh/deploykey
+        composer update
+        php artisan migrate
+        EOH
 end
-
-#composer_package "/srv/www/opsworks/current" do
-#       action :install
-#end
